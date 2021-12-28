@@ -1,0 +1,8 @@
+apiVersion: pkg.ndd.yndd.io/v1
+kind: Intent
+metadata:
+  name: nddr-organization
+  namespace: ndd-system
+spec:
+  package: yndd/nddr-organization:latest
+  packagePullPolicy: Always
