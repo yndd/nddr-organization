@@ -59,14 +59,14 @@ type registry struct {
 	client client.Client
 }
 
-func New(opts ...Option) (Registry, error) {
+func New(opts ...Option) Registry {
 	s := &registry{}
 
 	for _, opt := range opts {
 		opt(s)
 	}
 
-	return s, nil
+	return s
 }
 
 func (s *registry) WithLogger(log logging.Logger) {
