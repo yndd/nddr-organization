@@ -30,6 +30,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
+	"sigs.k8s.io/controller-runtime/pkg/source"
 
 	orgv1alpha1 "github.com/yndd/nddr-organization/apis/org/v1alpha1"
 	"github.com/yndd/nddr-organization/internal/shared"
@@ -121,11 +122,18 @@ func Setup(mgr ctrl.Manager, o controller.Options, nddcopts *shared.NddControlle
 		WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorderFor(name))),
 	)
 
+	orgHandler := &EnqueueRequestForAllOrganizations{
+		client: mgr.GetClient(),
+		log:    nddcopts.Logger,
+		ctx:    context.Background(),
+	}
+
 	return ctrl.NewControllerManagedBy(mgr).
 		Named(name).
 		WithOptions(o).
 		For(&orgv1alpha1.Deployment{}).
 		WithEventFilter(resource.IgnoreUpdateWithoutGenerationChangePredicate()).
+		Watches(&source.Kind{Type: &orgv1alpha1.Organization{}}, orgHandler).
 		Complete(r)
 }
 

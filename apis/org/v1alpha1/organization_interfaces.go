@@ -21,6 +21,8 @@ import (
 
 	nddv1 "github.com/yndd/ndd-runtime/apis/common/v1"
 	"github.com/yndd/ndd-runtime/pkg/resource"
+	"github.com/yndd/ndd-runtime/pkg/utils"
+	nddov1 "github.com/yndd/nddo-runtime/apis/common/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -52,6 +54,13 @@ type Org interface {
 	GetOrganizationName() string
 	GetDescription() string
 	GetRegister() map[string]string
+
+	InitializeResource() error
+	SetStatus(string)
+	SetReason(string)
+	GetStatus() string
+	GetStateRegister() map[string]string
+	SetStateRegister(map[string]string)
 }
 
 // GetCondition of this Network Node.
@@ -86,4 +95,58 @@ func (x *Organization) GetRegister() map[string]string {
 		}
 	}
 	return s
+}
+
+func (x *Organization) InitializeResource() error {
+	if x.Status.Organization != nil {
+		// resource was already initialiazed
+		// copy the spec, but not the state
+		return nil
+	}
+
+	x.Status.Organization = &NddrOrganization{
+		Register: make([]*nddov1.Register, 0),
+		State: &NddrOrgDeploymentState{
+			Status: utils.StringPtr(""),
+			Reason: utils.StringPtr(""),
+		},
+	}
+	return nil
+}
+
+func (x *Organization) SetStatus(s string) {
+	x.Status.Organization.State.Status = &s
+}
+
+func (x *Organization) SetReason(s string) {
+	x.Status.Organization.State.Reason = &s
+}
+
+func (x *Organization) GetStatus() string {
+	if x.Status.Organization != nil && x.Status.Organization.State != nil && x.Status.Organization.State.Status != nil {
+		return *x.Status.Organization.State.Status
+	}
+	return "unknown"
+}
+
+func (x *Organization) GetStateRegister() map[string]string {
+	r := make(map[string]string)
+	if x.Status.Organization != nil && x.Status.Organization.State != nil && x.Status.Organization.State.Status != nil {
+		for _, register := range x.Status.Organization.Register {
+			for kind, name := range register.GetRegister() {
+				r[kind] = name
+			}
+		}
+	}
+	return r
+}
+
+func (x *Organization) SetStateRegister(r map[string]string) {
+	x.Status.Organization.Register = make([]*nddov1.Register, 0, len(r))
+	for kind, name := range r {
+		x.Status.Organization.Register = append(x.Status.Organization.Register, &nddov1.Register{
+			Kind: utils.StringPtr(kind),
+			Name: utils.StringPtr(name),
+		})
+	}
 }

@@ -25,12 +25,15 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-const (
-	// OrganizationFinalizer is the name of the finalizer added to
-	// Organization to block delete operations until the physical node can be
-	// deprovisioned.
-	OrganizationFinalizer string = "organization.org.nddr.yndd.io"
-)
+type NddrOrganization struct {
+	Register []*nddov1.Register      `json:"register,omitempty"`
+	State    *NddrOrgDeploymentState `json:"state,omitempty"`
+}
+
+type NddrOrganizationState struct {
+	Reason *string `json:"reason,omitempty"`
+	Status *string `json:"status,omitempty"`
+}
 
 // Organization struct
 type OrgOrganization struct {
@@ -51,7 +54,7 @@ type OrganizationSpec struct {
 // A OrganizationStatus represents the observed state of a Organization.
 type OrganizationStatus struct {
 	nddv1.ConditionedStatus `json:",inline"`
-	//Organization            *NddrOrganizationOrganization `json:"Organization,omitempty"`
+	Organization            *NddrOrganization `json:"organization,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -60,6 +63,11 @@ type OrganizationStatus struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="SYNC",type="string",JSONPath=".status.conditions[?(@.kind=='Synced')].status"
 // +kubebuilder:printcolumn:name="STATUS",type="string",JSONPath=".status.conditions[?(@.kind=='Ready')].status"
+// +kubebuilder:printcolumn:name="IPAM",type="string",JSONPath=".status.organization.register[?(@.kind=='ipam')].name"
+// +kubebuilder:printcolumn:name="NI",type="string",JSONPath=".status.organization.register[?(@.kind=='network-instance')].name"
+// +kubebuilder:printcolumn:name="AS",type="string",JSONPath=".status.organization.register[?(@.kind=='as')].name"
+// +kubebuilder:printcolumn:name="EPG",type="string",JSONPath=".status.organization.register[?(@.kind=='endpoint-group')].name"
+// +kubebuilder:printcolumn:name="VLAN",type="string",JSONPath=".status.organization.register[?(@.kind=='vlan')].name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
 type Organization struct {
 	metav1.TypeMeta   `json:",inline"`

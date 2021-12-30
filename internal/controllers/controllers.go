@@ -17,7 +17,8 @@ limitations under the License.
 package controllers
 
 import (
-	"github.com/yndd/nddr-organization/internal/controllers/deployment"
+	"github.com/yndd/nddr-organization/internal/controllers/deployment2"
+	"github.com/yndd/nddr-organization/internal/controllers/organization"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 
@@ -27,7 +28,8 @@ import (
 // Setup package controllers.
 func Setup(mgr ctrl.Manager, option controller.Options, nddcopts *shared.NddControllerOptions) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options, *shared.NddControllerOptions) error{
-		deployment.Setup,
+		organization.Setup,
+		deployment2.Setup,
 	} {
 		if err := setup(mgr, option, nddcopts); err != nil {
 			return err

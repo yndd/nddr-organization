@@ -1305,12 +1305,12 @@ github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:
 github.com/yndd/ndd-core v0.1.6 h1:FAKVIBG8TYZNpN6AdE6VPodODL/sWKEYIxBdvp9cMAI=
 github.com/yndd/ndd-core v0.1.6/go.mod h1:zlQTBILqiJlYj3WYy0yHGBBIMZemhVXoNnXE4vhF+pI=
 github.com/yndd/ndd-runtime v0.1.1/go.mod h1:H9878DK7V5xxs4bi1pMrWPZJ6/+X3MqpKaErDPkcLs4=
-github.com/yndd/ndd-runtime v0.1.2 h1:k0dbhwCKsv78HHkbZAT8X01SOyahcyk7lAav00xEwKE=
-github.com/yndd/ndd-runtime v0.1.2/go.mod h1:Y07uIZQgSqz5h3UeAYp24JyDjugH0T/zeACjNFVnBes=
+github.com/yndd/ndd-runtime v0.1.6 h1:Pcn0ZsKDii9tKpxw4wf/tYey0iQVHxk8qQwSboGdzxU=
+github.com/yndd/ndd-runtime v0.1.6/go.mod h1:Y07uIZQgSqz5h3UeAYp24JyDjugH0T/zeACjNFVnBes=
 github.com/yndd/ndd-yang v0.1.62/go.mod h1:GT/8efIchBH1sQ6J64AM1FZDXXIaWeirkYUpbmDPlHI=
 github.com/yndd/ndd-yang v0.1.276/go.mod h1:vcKhP5OU3oJHSEILaE0HEgZKxftcu2GFOGdS6w0TauM=
-github.com/yndd/nddo-runtime v0.0.3 h1:Ns/gyw/wPrLwHdA5v4AsCy4TS2iHXNgY8VBZWQClCZM=
-github.com/yndd/nddo-runtime v0.0.3/go.mod h1:owkCFjPV4GG0+J52NrlB6RCAW7ZvnZMQy7X9CQsgbcE=
+github.com/yndd/nddo-runtime v0.0.15 h1:wmC4tDKCBgb89fnpjqxH9CQUJwWer/ADeLdFzSntqw4=
+github.com/yndd/nddo-runtime v0.0.15/go.mod h1:79/GyXM1iTMlUqfLj6S7YkiHKLvDFSi+drcwUoQgj3Q=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
