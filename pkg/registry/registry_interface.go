@@ -20,6 +20,7 @@ import (
 	"context"
 
 	"github.com/yndd/ndd-runtime/pkg/logging"
+	"github.com/yndd/nddo-grpc/resource/resourcepb"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -44,4 +45,5 @@ type Registry interface {
 	WithClient(client.Client)
 	GetRegisterName(string, string) string
 	GetRegister(context.Context, string, string) (map[string]string, error)
+	GetRegistryClient(ctx context.Context, registerName string) (resourcepb.ResourceClient, error)
 }

@@ -19,12 +19,22 @@ package registry
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 
+	pkgmetav1 "github.com/yndd/ndd-core/apis/pkg/meta/v1"
 	"github.com/yndd/ndd-runtime/pkg/logging"
+	"github.com/yndd/nddo-grpc/ndd"
+	rclient "github.com/yndd/nddo-grpc/resource/client"
+	"github.com/yndd/nddo-grpc/resource/resourcepb"
 	orgv1alpha1 "github.com/yndd/nddr-organization/apis/org/v1alpha1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+)
+
+const (
+	nddNamespace = "ndd-system"
 )
 
 type RegisterKind string
@@ -123,4 +133,69 @@ func (r *registry) GetRegister(ctx context.Context, namespace, registerName stri
 		}
 	}
 	return registers, nil
+}
+
+func (r *registry) GetRegistryClient(ctx context.Context, registerName string) (resourcepb.ResourceClient, error) {
+	registers := map[string]string{
+		"ipam":   "nddr-ipam",
+		"aspool": "nddr-aspool",
+	}
+
+	if _, ok := registers[registerName]; !ok {
+		return nil, fmt.Errorf("wrong register request, name not found: %s", registerName)
+	}
+	registerMatch := registers[registerName]
+
+	pods := &corev1.PodList{}
+	opts := []client.ListOption{
+		client.InNamespace(nddNamespace),
+	}
+	if err := r.client.List(ctx, pods, opts...); err != nil {
+		return nil, err
+	}
+
+	var podname string
+	found := false
+	for _, pod := range pods.Items {
+		podName := pod.GetName()
+		//r.log.Debug("pod", "podname", podName)
+		if strings.Contains(podName, registerMatch) {
+			podname = podName
+			found = true
+			break
+		}
+	}
+	if !found {
+		return nil, fmt.Errorf("no pod that matches %s, %s", registerName, registerMatch)
+	}
+
+	return getResourceClient(ctx, getGrpcServerName(podname))
+
+}
+
+func getGrpcServerName(podName string) string {
+	var newName string
+	for i, s := range strings.Split(podName, "-") {
+		if i == 0 {
+			newName = s
+		} else if i <= (len(strings.Split(podName, "-")) - 3) {
+			newName += "-" + s
+		}
+	}
+	return pkgmetav1.PrefixGnmiService + "-" + newName + "." + pkgmetav1.NamespaceLocalK8sDNS + strconv.Itoa((pkgmetav1.GnmiServerPort))
+}
+
+func getResourceClient(ctx context.Context, grpcserver string) (resourcepb.ResourceClient, error) {
+	cfg := &ndd.Config{
+		Address:  grpcserver,
+		Username: "admin",
+		Password: "admin",
+		//Timeout:    10 * time.Second,
+		SkipVerify: true,
+		Insecure:   true,
+		TLSCA:      "", //TODO TLS
+		TLSCert:    "",
+		TLSKey:     "",
+	}
+	return rclient.NewClient(ctx, cfg)
 }
