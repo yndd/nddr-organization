@@ -77,7 +77,7 @@ func (s *registry) WithClient(c client.Client) {
 	s.client = c
 }
 
-func (r *registry) GetRegiserName(organizationName string, deploymentName string) string {
+func (r *registry) GetRegisterName(organizationName string, deploymentName string) string {
 	if deploymentName == "" {
 		return organizationName
 	}

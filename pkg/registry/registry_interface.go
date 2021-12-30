@@ -42,6 +42,6 @@ func WithClient(c client.Client) Option {
 type Registry interface {
 	WithLogger(logging.Logger)
 	WithClient(client.Client)
-	GetRegiserName(string, string) string
+	GetRegisterName(string, string) string
 	GetRegister(context.Context, string, string) (map[string]string, error)
 }
