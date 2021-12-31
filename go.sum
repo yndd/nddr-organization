@@ -1316,8 +1316,8 @@ github.com/yndd/ndd-yang v0.1.62/go.mod h1:GT/8efIchBH1sQ6J64AM1FZDXXIaWeirkYUpb
 github.com/yndd/ndd-yang v0.1.276/go.mod h1:vcKhP5OU3oJHSEILaE0HEgZKxftcu2GFOGdS6w0TauM=
 github.com/yndd/nddo-grpc v0.0.11 h1:P6ogq7I0z5gpSg3RqUHhs3oWJGvPMhE+69t7evB+78E=
 github.com/yndd/nddo-grpc v0.0.11/go.mod h1:EtOPd2XxbxDMLMNheomiDZBQCCtY0DRdOer3MOEsgH0=
-github.com/yndd/nddo-runtime v0.0.15 h1:wmC4tDKCBgb89fnpjqxH9CQUJwWer/ADeLdFzSntqw4=
-github.com/yndd/nddo-runtime v0.0.15/go.mod h1:79/GyXM1iTMlUqfLj6S7YkiHKLvDFSi+drcwUoQgj3Q=
+github.com/yndd/nddo-runtime v0.0.18 h1:WflRP1Vi4Q9bSnPnn/cDgsfCACN9+Usz+dyaOrNi/98=
+github.com/yndd/nddo-runtime v0.0.18/go.mod h1:79/GyXM1iTMlUqfLj6S7YkiHKLvDFSi+drcwUoQgj3Q=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

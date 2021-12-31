@@ -27,6 +27,7 @@ import (
 	"github.com/yndd/nddo-grpc/ndd"
 	rclient "github.com/yndd/nddo-grpc/resource/client"
 	"github.com/yndd/nddo-grpc/resource/resourcepb"
+	nddov1 "github.com/yndd/nddo-runtime/apis/common/v1"
 	orgv1alpha1 "github.com/yndd/nddr-organization/apis/org/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -133,6 +134,33 @@ func (r *registry) GetRegister(ctx context.Context, namespace, registerName stri
 		}
 	}
 	return registers, nil
+}
+
+func (r *registry) GetAddressAllocationStrategy(ctx context.Context, namespace, registerName string) (*nddov1.AddressAllocationStrategy, error) {
+	switch len(strings.Split(registerName, ".")) {
+	case 2:
+		dep := &orgv1alpha1.Deployment{}
+		if err := r.client.Get(ctx, types.NamespacedName{
+			Namespace: namespace,
+			Name:      registerName,
+		}, dep); err != nil {
+			return nil, err
+		}
+		return dep.GetAddressAllocationStrategy(), nil
+
+	case 1:
+		org := &orgv1alpha1.Organization{}
+		if err := r.client.Get(ctx, types.NamespacedName{
+			Namespace: namespace,
+			Name:      registerName,
+		}, org); err != nil {
+			return nil, err
+		}
+
+		return org.GetAddressAllocationStrategy(), nil
+	default:
+		return nil, fmt.Errorf("wrong input in get register %s", registerName)
+	}
 }
 
 func (r *registry) GetRegistryClient(ctx context.Context, registerName string) (resourcepb.ResourceClient, error) {

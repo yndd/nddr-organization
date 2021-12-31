@@ -25,6 +25,7 @@ import (
 
 	"github.com/yndd/ndd-runtime/pkg/event"
 	"github.com/yndd/ndd-runtime/pkg/logging"
+	nddov1 "github.com/yndd/nddo-runtime/apis/common/v1"
 	"github.com/yndd/nddo-runtime/pkg/reconciler/managed"
 	"github.com/yndd/nddo-runtime/pkg/resource"
 	orgv1alpha1 "github.com/yndd/nddr-organization/apis/org/v1alpha1"
@@ -45,7 +46,7 @@ const (
 
 // Setup adds a controller that reconciles infra.
 func Setup(mgr ctrl.Manager, o controller.Options, nddcopts *shared.NddControllerOptions) error {
-	name := "nddo/" + strings.ToLower(orgv1alpha1.OrganizationGroupKind)
+	name := "nddo/" + strings.ToLower(orgv1alpha1.DeploymentGroupKind)
 	depfn := func() orgv1alpha1.Dp { return &orgv1alpha1.Deployment{} }
 	deplfn := func() orgv1alpha1.DpList { return &orgv1alpha1.DeploymentList{} }
 	orglfn := func() orgv1alpha1.OrgList { return &orgv1alpha1.OrganizationList{} }
@@ -53,7 +54,7 @@ func Setup(mgr ctrl.Manager, o controller.Options, nddcopts *shared.NddControlle
 	speedy := make(map[string]int)
 
 	r := managed.NewReconciler(mgr,
-		resource.ManagedKind(orgv1alpha1.OrganizationGroupVersionKind),
+		resource.ManagedKind(orgv1alpha1.DeploymentGroupVersionKind),
 		managed.WithLogger(nddcopts.Logger.WithValues("controller", name)),
 		managed.WithApplication(&application{
 			client: resource.ClientApplicator{
@@ -99,7 +100,7 @@ type application struct {
 	speedyMutex sync.Mutex
 }
 
-func getCrName(cr orgv1alpha1.Org) string {
+func getCrName(cr orgv1alpha1.Dp) string {
 	return strings.Join([]string{cr.GetNamespace(), cr.GetName()}, ".")
 }
 
@@ -165,11 +166,13 @@ func (r *application) handleAppLogic(ctx context.Context, cr orgv1alpha1.Dp) (ma
 	}
 
 	orgfound := false
-	orgregister := make(map[string]string)
+	orgRegister := make(map[string]string)
+	var orgAddressAllocationStrategy *nddov1.AddressAllocationStrategy
 	for _, org := range orgs.GetOrganizations() {
 		if org.GetOrganizationName() == cr.GetOrganizationName() {
 			orgfound = true
-			orgregister = org.GetRegister()
+			orgRegister = org.GetRegister()
+			orgAddressAllocationStrategy = org.GetAddressAllocationStrategy()
 			break
 		}
 	}
@@ -187,8 +190,10 @@ func (r *application) handleAppLogic(ctx context.Context, cr orgv1alpha1.Dp) (ma
 	} else {
 		cr.SetStatus("up")
 		cr.SetReason("")
-		depRegister := getDeploymentRegister(orgregister, cr.GetRegister())
+		depRegister := getDeploymentRegister(orgRegister, cr.GetRegister())
 		cr.SetStateRegister(depRegister)
+		aas := getDeploymentAddresssAllocationStrategy(orgAddressAllocationStrategy, cr.GetAddressAllocationStrategy())
+		cr.SetStateAddressAllocationStrategy(aas)
 	}
 	return make(map[string]string), nil
 }
@@ -200,4 +205,11 @@ func getDeploymentRegister(orgRegister, depRegister map[string]string) map[strin
 		}
 	}
 	return depRegister
+}
+
+func getDeploymentAddresssAllocationStrategy(orgass, depaas *nddov1.AddressAllocationStrategy) *nddov1.AddressAllocationStrategy {
+	if depaas != nil {
+		return depaas
+	}
+	return orgass
 }

@@ -26,8 +26,9 @@ import (
 )
 
 type NddrOrganization struct {
-	Register []*nddov1.Register      `json:"register,omitempty"`
-	State    *NddrOrgDeploymentState `json:"state,omitempty"`
+	Register                  []*nddov1.Register                `json:"register,omitempty"`
+	AddressAllocationStrategy *nddov1.AddressAllocationStrategy `json:"address-allocation-strategy,omitempty"`
+	State                     *NddrOrgDeploymentState           `json:"state,omitempty"`
 }
 
 type NddrOrganizationState struct {
@@ -41,8 +42,9 @@ type OrgOrganization struct {
 	// kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Description *string            `json:"description,omitempty"`
-	Register    []*nddov1.Register `json:"register,omitempty"`
+	Description               *string                           `json:"description,omitempty"`
+	Register                  []*nddov1.Register                `json:"register,omitempty"`
+	AddressAllocationStrategy *nddov1.AddressAllocationStrategy `json:"address-allocation-strategy,omitempty"`
 }
 
 // A OrganizationSpec defines the desired state of a Organization.

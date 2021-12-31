@@ -21,6 +21,7 @@ import (
 
 	"github.com/yndd/ndd-runtime/pkg/logging"
 	"github.com/yndd/nddo-grpc/resource/resourcepb"
+	nddov1 "github.com/yndd/nddo-runtime/apis/common/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -45,5 +46,6 @@ type Registry interface {
 	WithClient(client.Client)
 	GetRegisterName(string, string) string
 	GetRegister(context.Context, string, string) (map[string]string, error)
+	GetAddressAllocationStrategy(context.Context, string, string) (*nddov1.AddressAllocationStrategy, error)
 	GetRegistryClient(ctx context.Context, registerName string) (resourcepb.ResourceClient, error)
 }

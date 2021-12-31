@@ -147,9 +147,11 @@ func (r *application) handleAppLogic(ctx context.Context, cr orgv1alpha1.Org) (m
 	log := r.log.WithValues("function", "handleAppLogic", "crname", cr.GetName())
 	log.Debug("handleAppLogic")
 
-	depRegister := cr.GetRegister()
+	register := cr.GetRegister()
+	aas := cr.GetAddressAllocationStrategy()
 	cr.SetStatus("up")
 	cr.SetReason("")
-	cr.SetStateRegister(depRegister)
+	cr.SetStateRegister(register)
+	cr.SetStateAddressAllocationStrategy(aas)
 	return make(map[string]string), nil
 }

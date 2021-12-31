@@ -54,6 +54,7 @@ type Org interface {
 	GetOrganizationName() string
 	GetDescription() string
 	GetRegister() map[string]string
+	GetAddressAllocationStrategy() *nddov1.AddressAllocationStrategy
 
 	InitializeResource() error
 	SetStatus(string)
@@ -61,6 +62,8 @@ type Org interface {
 	GetStatus() string
 	GetStateRegister() map[string]string
 	SetStateRegister(map[string]string)
+	GetStateAddressAllocationStrategy() *nddov1.AddressAllocationStrategy
+	SetStateAddressAllocationStrategy(*nddov1.AddressAllocationStrategy)
 }
 
 // GetCondition of this Network Node.
@@ -97,6 +100,13 @@ func (x *Organization) GetRegister() map[string]string {
 	return s
 }
 
+func (x *Organization) GetAddressAllocationStrategy() *nddov1.AddressAllocationStrategy {
+	if reflect.ValueOf(x.Spec.Organization.AddressAllocationStrategy).IsZero() {
+		return &nddov1.AddressAllocationStrategy{}
+	}
+	return x.Spec.Organization.AddressAllocationStrategy
+}
+
 func (x *Organization) InitializeResource() error {
 	if x.Status.Organization != nil {
 		// resource was already initialiazed
@@ -105,7 +115,8 @@ func (x *Organization) InitializeResource() error {
 	}
 
 	x.Status.Organization = &NddrOrganization{
-		Register: make([]*nddov1.Register, 0),
+		Register:                  make([]*nddov1.Register, 0),
+		AddressAllocationStrategy: &nddov1.AddressAllocationStrategy{},
 		State: &NddrOrgDeploymentState{
 			Status: utils.StringPtr(""),
 			Reason: utils.StringPtr(""),
@@ -149,4 +160,15 @@ func (x *Organization) SetStateRegister(r map[string]string) {
 			Name: utils.StringPtr(name),
 		})
 	}
+}
+
+func (x *Organization) GetStateAddressAllocationStrategy() *nddov1.AddressAllocationStrategy {
+	if x.Status.Organization != nil {
+		return x.Status.Organization.AddressAllocationStrategy
+	}
+	return &nddov1.AddressAllocationStrategy{}
+}
+
+func (x *Organization) SetStateAddressAllocationStrategy(a *nddov1.AddressAllocationStrategy) {
+	x.Status.Organization.AddressAllocationStrategy = a
 }

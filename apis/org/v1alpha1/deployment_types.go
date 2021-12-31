@@ -33,8 +33,9 @@ const (
 )
 
 type NddrOrgDeployment struct {
-	Register []*nddov1.Register      `json:"register,omitempty"`
-	State    *NddrOrgDeploymentState `json:"state,omitempty"`
+	Register                  []*nddov1.Register                `json:"register,omitempty"`
+	AddressAllocationStrategy *nddov1.AddressAllocationStrategy `json:"address-allocation-strategy,omitempty"`
+	State                     *NddrOrgDeploymentState           `json:"state,omitempty"`
 }
 
 type NddrOrgDeploymentState struct {
@@ -55,8 +56,9 @@ type OrgDeployment struct {
 	Region      *string `json:"region,omitempty"`
 	// +kubebuilder:validation:Enum=`dc`;`wan`
 	// +kubebuilder:default:="dc"
-	Kind     *string            `json:"kind,omitempty"`
-	Register []*nddov1.Register `json:"register,omitempty"`
+	Kind                      *string                           `json:"kind,omitempty"`
+	Register                  []*nddov1.Register                `json:"register,omitempty"`
+	AddressAllocationStrategy *nddov1.AddressAllocationStrategy `json:"address-allocation-strategy,omitempty"`
 }
 
 // A DeploymentSpec defines the desired state of a Deployment.
