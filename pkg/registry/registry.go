@@ -146,7 +146,7 @@ func (r *registry) GetAddressAllocationStrategy(ctx context.Context, namespace, 
 		}, dep); err != nil {
 			return nil, err
 		}
-		return dep.GetAddressAllocationStrategy(), nil
+		return dep.GetStateAddressAllocationStrategy(), nil
 
 	case 1:
 		org := &orgv1alpha1.Organization{}
@@ -157,7 +157,7 @@ func (r *registry) GetAddressAllocationStrategy(ctx context.Context, namespace, 
 			return nil, err
 		}
 
-		return org.GetAddressAllocationStrategy(), nil
+		return org.GetStateAddressAllocationStrategy(), nil
 	default:
 		return nil, fmt.Errorf("wrong input in get register %s", registerName)
 	}
