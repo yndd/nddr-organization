@@ -165,9 +165,9 @@ func (r *registry) GetAddressAllocationStrategy(ctx context.Context, namespace, 
 
 func (r *registry) GetRegistryClient(ctx context.Context, registerName string) (resourcepb.ResourceClient, error) {
 	registers := map[string]string{
-		"ipam":   "nddr-ipam",
-		"aspool": "nddr-aspool",
-		"ni-registry": "nddr-ni-registry",
+		RegisterKindIpam.String():            "nddr-ipam",
+		RegisterKindAs.String():              "nddr-aspool",
+		RegisterKindNetworkInstance.String(): "nddr-ni-registry",
 	}
 
 	if _, ok := registers[registerName]; !ok {
