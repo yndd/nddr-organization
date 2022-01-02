@@ -167,6 +167,7 @@ func (r *registry) GetRegistryClient(ctx context.Context, registerName string) (
 	registers := map[string]string{
 		"ipam":   "nddr-ipam",
 		"aspool": "nddr-aspool",
+		"ni-registry": "nddr-ni-registry",
 	}
 
 	if _, ok := registers[registerName]; !ok {
